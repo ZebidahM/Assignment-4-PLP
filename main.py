@@ -1,19 +1,7 @@
+#my code
+from operator import itemgetter
+
 def sort_dict_list(dict_list, key, reverse=False):
-    """
-    Sort a list of dictionaries by a specific key.
-    
-    Args:
-        dict_list (list): List of dictionaries to sort
-        key (str): The key to sort by
-        reverse (bool): If True, sort in descending order. Default is False (ascending)
-    
-    Returns:
-        list: Sorted list of dictionaries
-    
-    Raises:
-        KeyError: If the key doesn't exist in one or more dictionaries
-        TypeError: If dict_list is not a list or contains non-dict items
-    """
     if not isinstance(dict_list, list):
         raise TypeError("First argument must be a list")
     
@@ -31,40 +19,44 @@ def sort_dict_list(dict_list, key, reverse=False):
     return sorted(dict_list, key=lambda x: x[key], reverse=reverse)
 
 
-# Example usage and test cases
+# #github copilot code
+def sort_by_key(data, key, reverse=False):
+    """
+    Sorts a list of dictionaries by a specified key, handling missing keys and mixed types.
+    """
+    def safe_key(d):
+        value = d.get(key, None)
+        return str(value) if value is not None else ''
+    return sorted(data, key=safe_key, reverse=reverse)
+
 if __name__ == "__main__":
-    # Sample data
+    # Example 1: Students
     students = [
         {"name": "Alice", "age": 23, "grade": 85},
         {"name": "Bob", "age": 21, "grade": 92},
         {"name": "Charlie", "age": 22, "grade": 78},
         {"name": "Diana", "age": 24, "grade": 96}
     ]
-    
-    # Sort by age (ascending)
-    print("Sorted by age (ascending):")
-    sorted_by_age = sort_dict_list(students, "age")
-    for student in sorted_by_age:
-        print(f"  {student}")
-    
-    print("\nSorted by grade (descending):")
-    sorted_by_grade = sort_dict_list(students, "grade", reverse=True)
-    for student in sorted_by_grade:
-        print(f"  {student}")
-    
-    print("\nSorted by name (alphabetical):")
-    sorted_by_name = sort_dict_list(students, "name")
-    for student in sorted_by_name:
-        print(f"  {student}")
-    
-    # Alternative: Using Python's built-in sorted() directly
-    print("\n--- Alternative approaches ---")
-    
-    # Simple one-liner for basic sorting
-    simple_sort = sorted(students, key=lambda x: x["age"])
-    print("Simple sort by age:", simple_sort[0]["name"], "is youngest")
-    
-    # Using operator.itemgetter for better performance with large datasets
-    from operator import itemgetter
-    efficient_sort = sorted(students, key=itemgetter("grade"), reverse=True)
-    print("Most efficient sort by grade:", efficient_sort[0]["name"], "has highest grade")
+    print("Students sorted by age:")
+    for s in sort_by_key(students, "age"):
+        print(f"  {s}")
+
+    # Example 2: Employees (different structure)
+    employees = [
+        {"employee_id": 101, "department": "HR", "salary": 50000},
+        {"employee_id": 102, "department": "IT", "salary": 70000},
+        {"employee_id": 103, "department": "Finance", "salary": 65000}
+    ]
+    print("\nEmployees sorted by salary (descending):")
+    for e in sort_by_key(employees, "salary", reverse=True):
+        print(f"  {e}")
+
+    # Example 3: Cars (another structure)
+    cars = [
+        {"make": "Toyota", "model": "Corolla", "year": 2020},
+        {"make": "Honda", "model": "Civic", "year": 2018},
+        {"make": "Ford", "model": "Focus", "year": 2019}
+    ]
+    print("\nCars sorted by year:")
+    for c in sort_by_key(cars, "year"):
+        print(f"  {c}")
